@@ -6,6 +6,7 @@ app = Flask(__name__)
 global now
 now = datetime.now()
 FAKE_DATABASE = []
+profile_database = {}
 
 profile_object = {}
 count = 0
@@ -63,8 +64,8 @@ def post_data():
 #READ --GET FUNCTIONS
 @app.route("/profile", methods=["GET"])
 def get_profile():
-
-    return jsonify(FAKE_DATABASE)
+    global profile_object
+    return jsonify(profile_object)
 
 #-----------TANK------------------
 @app.route("/data", methods=["GET"])
@@ -76,21 +77,27 @@ def get_data():
 #UPDATE -- PATCH FUNCTIONS
 @app.route("/profile/<Username>/<Role>/<Colour>", methods=["PATCH"])
 def patch_profile(Username, Role, Colour):
-    global profile_object
 
-    profile_object = arr
-    arr = []  
+
+    global profile_object
+    profile_database = [profile_object]
+    #return jsonify(profile_object)
     
-    for u in arr:
-        u["Username"] = request.json["Username"]
-        
-        for r in arr:
-            r["Role"]=request.json["Role"]  
-            
-            for f in arr:
-                f["Colour"] = request.json["Colour"]
-            
-                return jsonify(u, r, f)
+    #for u in profile_database:
+    if 'Username' in request.json:
+        profile_object["Username"] = request.json["Username"]
+        return jsonify(profile_database)
+    else:    
+        #for r in profile_database:
+        if 'Role' in request.json:
+            profile_object["Role"]=request.json["Role"]  
+            return jsonify(profile_database)
+        else:   
+            #for f in profile_database:
+            if 'Colour' in request.json:
+                profile_object["Colour"] = request.json["Colour"]
+                        
+                return jsonify(profile_database)
                                 
 
 #-----------------TANK_-----------------    
